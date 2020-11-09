@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Blazor.Console;
+
+@inject IServiceProvider ServiceProvider
+@*@inject IRunningCommand RunningCommand*@
+
+@inherits Blazor.Console.BlazorConsoleComponent
+
+<div id="console">
+    <br>>@Name @System.DateTimeOffset.Now.ToString("dd MMMM yyyy HH:mm:ss \"GMT\"zzz", System.Globalization.CultureInfo.InvariantCulture)
+    <br>>Blazor CommandLine [Version @Version()]
+    <code>@((MarkupString)Output)</code>
+    <EditForm OnValidSubmit="Execute" autocomplete="off" Model="Command" novalidate>
+        <InputText id="commandline" autocomplete="off" Class="cmdline" disabled="@Disabled" placeholder="@Placeholder" @bind-Value="@Command.Text" />
+    </EditForm>
+</div>
