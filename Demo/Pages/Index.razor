@@ -8,9 +8,16 @@
 
 <Blazor.Console.BlazorConsole Name="fooTest" @ref="console" />
 
+@*<button onclick="@StartConsoleApp();">start console app</button>*@
+
 @code
 {
     BlazorConsole console;
+
+    private Task StartConsoleApp()
+    {
+        return InvokeAsync(ConsoleTest.StartAsync);
+    }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -23,7 +30,9 @@
         //    }
         //}).ConfigureAwait(false);
 
-        await ConsoleTest.StartAsync();
+        //await ConsoleTest.StartAsync();
+
+        InvokeAsync(ConsoleTest.StartAsync);
 
         //Thread t = new Thread(
         //async () =>
