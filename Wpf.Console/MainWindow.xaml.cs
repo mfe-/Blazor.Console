@@ -60,7 +60,7 @@ namespace Wpf.Console
 
         }
         SynchronizationContext SynchronizationContext = SynchronizationContext.Current;
-        public void WriteLine(string consoleInput)
+        public Task WriteLine(string consoleInput)
         {
             string readLineText = consoleInput;
             _StringBuilder.AppendLine(readLineText);
@@ -79,6 +79,7 @@ namespace Wpf.Console
             {
                 outputTextBox.Text = _StringBuilder.ToString();
             }
+            return Task.CompletedTask;
         }
         TaskCompletionSource<string> StringTaskCompletionSource = new TaskCompletionSource<string>();
         public string Read()

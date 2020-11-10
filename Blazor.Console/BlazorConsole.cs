@@ -69,7 +69,7 @@ namespace Blazor.Console
             return Task.CompletedTask;
         }
 
-        public void WriteLine(string consoleInput)
+        public Task WriteLine(string consoleInput)
         {
             string readLineText = consoleInput;
             _StringBuilder.AppendLine($"<br>{readLineText}");
@@ -77,6 +77,7 @@ namespace Blazor.Console
             DisableInput();
             //force rerender of component
             StateHasChanged();
+            return Task.CompletedTask;
         }
         public void ToggleReadOnly()
         {

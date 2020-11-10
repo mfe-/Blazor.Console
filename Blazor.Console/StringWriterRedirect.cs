@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Blazor.Console
 {
@@ -11,39 +12,39 @@ namespace Blazor.Console
     /// </remarks>
     public class StringWriterRedirect : StringWriter
     {
-        public Action<String> OnWrite;
+        public Func<String,Task> OnWrite;
 
-        private void WriteGeneric<T>(T value) { OnWrite?.Invoke(value.ToString()); }
+        private Task WriteGeneric<T>(T value) { return OnWrite?.Invoke(value.ToString()); }
 
-        public override void Write(char value) { WriteGeneric<char>(value); }
-        public override void Write(string value) { WriteGeneric<string>(value); }
-        public override void Write(bool value) { WriteGeneric<bool>(value); }
-        public override void Write(int value) { WriteGeneric<int>(value); }
-        public override void Write(double value) { WriteGeneric<double>(value); }
-        public override void Write(long value) { WriteGeneric<long>(value); }
+        public override async void Write(char value) { await WriteGeneric<char>(value); }
+        public override async void Write(string value) { await WriteGeneric<string>(value); }
+        public override async void Write(bool value) { await WriteGeneric<bool>(value); }
+        public override async void Write(int value) { await WriteGeneric<int>(value); }
+        public override async void Write(double value) { await WriteGeneric<double>(value); }
+        public override async void Write(long value) { await WriteGeneric<long>(value); }
 
-        private void WriteLineGeneric<T>(T value) { OnWrite?.Invoke($"{value}\n"); }
-        public override void WriteLine(char value) { WriteLineGeneric<char>(value); }
-        public override void WriteLine(string value) { WriteLineGeneric<string>(value); }
-        public override void WriteLine(bool value) { WriteLineGeneric<bool>(value); }
-        public override void WriteLine(int value) { WriteLineGeneric<int>(value); }
-        public override void WriteLine(double value) { WriteLineGeneric<double>(value); }
-        public override void WriteLine(long value) { WriteLineGeneric<long>(value); }
+        private Task WriteLineGeneric<T>(T value) { return OnWrite?.Invoke($"{value}\n"); }
+        public override async void WriteLine(char value) { await WriteLineGeneric<char>(value); }
+        public override async void WriteLine(string value) { await WriteLineGeneric<string>(value); }
+        public override async void WriteLine(bool value) { await WriteLineGeneric<bool>(value); }
+        public override async void WriteLine(int value) { await WriteLineGeneric<int>(value); }
+        public override async void WriteLine(double value) { await WriteLineGeneric<double>(value); }
+        public override async void WriteLine(long value) { await WriteLineGeneric<long>(value); }
 
-        public override void Write(char[] buffer, int index, int count)
+        public override async void Write(char[] buffer, int index, int count)
         {
             base.Write(buffer, index, count);
             char[] buffer2 = new char[count]; //Ensures large buffers are not a problem
             for (int i = 0; i < count; i++) buffer2[i] = buffer[index + i];
-            WriteGeneric<char[]>(buffer2);
+            await WriteGeneric<char[]>(buffer2);
         }
 
-        public override void WriteLine(char[] buffer, int index, int count)
+        public override async void WriteLine(char[] buffer, int index, int count)
         {
             base.Write(buffer, index, count);
             char[] buffer2 = new char[count]; //Ensures large buffers are not a problem
             for (int i = 0; i < count; i++) buffer2[i] = buffer[index + i];
-            WriteLineGeneric<char[]>(buffer2);
+            await WriteLineGeneric<char[]>(buffer2);
         }
     }
 }
