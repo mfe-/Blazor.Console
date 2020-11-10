@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using Blazor.Console;
+@using System.Threading;
 
 @*<h1>Hello, world!</h1>
 
@@ -13,10 +14,36 @@
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-     
+
+        //Task.Run(() => ConsoleTest.StartAsync()).ContinueWith(a =>
+        //{
+        //    if (a.Exception != null)
+        //    {
+        //        Console.WriteLine(a.Exception);
+        //    }
+        //}).ConfigureAwait(false);
 
         await ConsoleTest.StartAsync();
-        console.WriteLine("geh ");
+
+        //Thread t = new Thread(
+        //async () =>
+        //{
+        //    await ConsoleTest.StartAsync();
+        //});
+        //t.IsBackground = true;
+        //t.Name = "console";
+        //t.Start();
+
+        //ConsoleTest.StartAsync().ConfigureAwait(false);
+
+        //Task.Run(() => console.WriteLine("Task")).ContinueWith(a =>
+        //{
+        //    if (a.Exception != null)
+        //    {
+        //        Console.WriteLine(a.Exception);
+        //    }
+        //}).ConfigureAwait(false);
+
 
         await base.OnAfterRenderAsync(firstRender);
     }

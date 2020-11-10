@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blazor.Console
@@ -13,37 +14,92 @@ namespace Blazor.Console
         private readonly StringBuilder _StringBuilder = new StringBuilder();
         protected ConsoleInput Command { get; set; }
         protected string Output = string.Empty;
-        protected string Placeholder { get; set; } = "Enter a command, type 'help' for avaliable commands.";
-        protected string Disabled { get; set; } = null;
+        protected string Placeholder { get; set; } = "Wait for input request.";
+        protected string Disabled { get; set; } = DisabledString;
+        public static readonly string DisabledString = "Disabled";
         [Parameter] public string Name { get; set; }
         public string Version() => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+        protected StringWriterRedirect _stringWriterRedirect;
+        protected StringReaderRedirect _stringReaderRedirect;
         protected override Task OnInitializedAsync()
         {
+            _stringWriterRedirect = new StringWriterRedirect() { OnWrite = WriteLine };
+            System.Console.SetOut(_stringWriterRedirect);
+            _stringReaderRedirect = new StringReaderRedirect(Read);
+            System.Console.SetIn(_stringReaderRedirect);
+
             Command = new ConsoleInput();
-            System.Console.SetOut(new StringWriterRedirect() { OnWrite = WriteLine });
+            Disabled = DisabledString;
 
             return base.OnInitializedAsync();
         }
+        TaskCompletionSource<string> StringReadTaskCompletionSource = new TaskCompletionSource<string>();
+        public string Read()
+        {
+            DisableInput();
+            ////StringReadTaskCompletionSource = new TaskCompletionSource<string>();
+            ////var t = StringReadTaskCompletionSource.Task.ConfigureAwait(false);
+
+            //while (String.IsNullOrEmpty(Command.Text))
+            //{
+            //    if (!String.IsNullOrEmpty(Command.Text))
+            //    {
+            //        break;
+            //    }
+            //    //System.Threading.Thread.Yield();
+            //}
+
+
+            ////string r = t.GetAwaiter().GetResult();
+            //Disabled = DisabledString;
+            //StateHasChanged();
+            ////return r;
+            return "oh";
+        }
+
 
         protected Task Execute(EditContext context)
         {
-            Placeholder = "Please wait for command to be completed.";
-            if(context?.Model is ConsoleInput consoleInput)
+            if (context?.Model is ConsoleInput consoleInput)
             {
-                WriteLine(consoleInput.Text);
+                //StringReadTaskCompletionSource.SetResult(consoleInput.Text);
                 consoleInput.Text = string.Empty;
             }
             return Task.CompletedTask;
         }
-        
+
         public void WriteLine(string consoleInput)
         {
             string readLineText = consoleInput;
             _StringBuilder.AppendLine($"<br>{readLineText}");
             Output = _StringBuilder.ToString();
+            DisableInput();
             //force rerender of component
             StateHasChanged();
+        }
+        public void ToggleReadOnly()
+        {
+            if (Disabled == null)
+            {
+                DisableInput();
+            }
+            else
+            {
+                EnableInput();
+            }
+        }
+
+        private void EnableInput()
+        {
+            Disabled = null;
+            Placeholder = "Enter input.";
+        }
+
+        private void DisableInput()
+        {
+            Disabled = DisabledString;
+            Placeholder = "Wait for input request.";
         }
     }
 }

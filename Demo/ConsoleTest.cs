@@ -12,23 +12,18 @@ namespace Blazor.Console.Demo
             bool ask = false;
             do
             {
-                System.Console.WriteLine("Geben Sie den Namen ihrer Katze ein!");
-
-
-                System.Console.WriteLine("GasdfKatze ein!");
-
+                System.Console.WriteLine("Please enter the name of your cat!");
                 string v = System.Console.ReadLine();
-                System.Console.WriteLine(v);
+                System.Console.WriteLine($"The name of your cat is {v}");
                 if (v == "charly")
                 {
                     ask = false;
                 }
-                else
-                {
-                    
-                }
             }
             while (ask) ;
+
+            System.Console.WriteLine("After ReadLine loop");
+
             return Task.CompletedTask;
         }
     }

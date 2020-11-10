@@ -10,7 +10,7 @@
     <br>>@Name @System.DateTimeOffset.Now.ToString("dd MMMM yyyy HH:mm:ss \"GMT\"zzz", System.Globalization.CultureInfo.InvariantCulture)
     <br>>Blazor CommandLine [Version @Version()]
     <code>@((MarkupString)Output)</code>
-    <EditForm OnValidSubmit="Execute" autocomplete="off" Model="Command" novalidate>
+    <EditForm OnValidSubmit="Execute" autocomplete="off" Model="Command" novalidate >
         <InputText id="commandline" autocomplete="off" Class="cmdline" disabled="@Disabled" placeholder="@Placeholder" @bind-Value="@Command.Text" />
     </EditForm>
 </div>

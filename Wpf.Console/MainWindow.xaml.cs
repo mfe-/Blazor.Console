@@ -51,6 +51,7 @@ namespace Wpf.Console
             () =>
             {
                 ConsoleApp1.Program.Main(null);
+                MessageBox.Show("ConsoleApp finished.");
             });
             t.IsBackground = true;
             t.Name = "console";
@@ -86,6 +87,7 @@ namespace Wpf.Console
             var t = StringTaskCompletionSource.Task.ConfigureAwait(false);
 
             string r = t.GetAwaiter().GetResult();
+            StringTaskCompletionSource = null;
             return r;
         }
 
@@ -93,7 +95,7 @@ namespace Wpf.Console
         {
             if(e.Key==Key.Enter)
             {
-                StringTaskCompletionSource.SetResult(inputTextBox.Text);
+                StringTaskCompletionSource?.SetResult(inputTextBox.Text);
                 inputTextBox.Text = String.Empty;
             }
         }
