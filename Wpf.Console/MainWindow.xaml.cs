@@ -82,12 +82,12 @@ namespace Wpf.Console
             return Task.CompletedTask;
         }
         TaskCompletionSource<string> StringTaskCompletionSource = new TaskCompletionSource<string>();
-        public string Read()
+        public async Task<string> Read()
         {
             StringTaskCompletionSource = new TaskCompletionSource<string>();
             var t = StringTaskCompletionSource.Task.ConfigureAwait(false);
 
-            string r = t.GetAwaiter().GetResult();
+            string r = await t;
             StringTaskCompletionSource = null;
             return r;
         }

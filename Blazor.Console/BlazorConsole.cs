@@ -35,9 +35,11 @@ namespace Blazor.Console
             return base.OnInitializedAsync();
         }
         TaskCompletionSource<string> StringReadTaskCompletionSource = new TaskCompletionSource<string>();
-        public string Read()
+        public Task<String> Read()
         {
             DisableInput();
+
+
             ////StringReadTaskCompletionSource = new TaskCompletionSource<string>();
             ////var t = StringReadTaskCompletionSource.Task.ConfigureAwait(false);
 
@@ -55,9 +57,9 @@ namespace Blazor.Console
             //Disabled = DisabledString;
             //StateHasChanged();
             ////return r;
-            return "oh";
+            return Task.FromResult("oh");
         }
-
+        
 
         protected Task Execute(EditContext context)
         {

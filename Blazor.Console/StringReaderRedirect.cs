@@ -8,16 +8,23 @@ namespace Blazor.Console
 {
     public class StringReaderRedirect : StringReader
     {
-        private readonly Func<String> _ReadRedirectFunc;
-        public StringReaderRedirect(Func<String> readredirect) : base("foo")
+        private readonly Func<Task<string>> _ReadRedirectFunc;
+        public StringReaderRedirect(Func<Task<string>> readredirect) : base("foo")
         {
             _ReadRedirectFunc = readredirect;
         }
 
         public override string ReadLine()
         {
-            return _ReadRedirectFunc?.Invoke();
+            //return _ReadRedirectFunc?.Invoke();
             //return base.ReadLine();
+            Task<string> task = _ReadRedirectFunc?.Invoke();
+
+            return task?.GetAwaiter().GetResult();
+        }
+        public Task<string> GetString()
+        {
+            return Task.FromResult("okay);");
         }
         public override int Read()
         {
