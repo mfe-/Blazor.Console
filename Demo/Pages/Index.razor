@@ -13,7 +13,11 @@
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
+     
+
         await ConsoleTest.StartAsync();
+        console.WriteLine("geh ");
+
         await base.OnAfterRenderAsync(firstRender);
     }
 }

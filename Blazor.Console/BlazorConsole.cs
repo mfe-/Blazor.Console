@@ -10,7 +10,7 @@ namespace Blazor.Console
 {
     public partial class BlazorConsoleComponent : ComponentBase
     {
-        private StringBuilder StringBuilder = new StringBuilder();
+        private readonly StringBuilder _StringBuilder = new StringBuilder();
         protected ConsoleInput Command { get; set; }
         protected string Output = string.Empty;
         protected string Placeholder { get; set; } = "Enter a command, type 'help' for avaliable commands.";
@@ -21,6 +21,8 @@ namespace Blazor.Console
         protected override Task OnInitializedAsync()
         {
             Command = new ConsoleInput();
+            System.Console.SetOut(new StringWriterRedirect() { OnWrite = WriteLine });
+
             return base.OnInitializedAsync();
         }
 
@@ -29,14 +31,19 @@ namespace Blazor.Console
             Placeholder = "Please wait for command to be completed.";
             if(context?.Model is ConsoleInput consoleInput)
             {
-                string readLineText = consoleInput.Text;
-                StringBuilder.AppendLine($"<br>{readLineText}");
-                Output = StringBuilder.ToString();
+                WriteLine(consoleInput.Text);
                 consoleInput.Text = string.Empty;
             }
             return Task.CompletedTask;
         }
-
-
+        
+        public void WriteLine(string consoleInput)
+        {
+            string readLineText = consoleInput;
+            _StringBuilder.AppendLine($"<br>{readLineText}");
+            Output = _StringBuilder.ToString();
+            //force rerender of component
+            StateHasChanged();
+        }
     }
 }
