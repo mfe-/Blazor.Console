@@ -54,18 +54,18 @@ steps:
   inputs:
     command: 'pack'
     packagesToPack: '**/Console.Extensions.csproj;**/Blazor.Console.csproj;'
-    includesymbols: true
-    includesource: true
+    #includesymbols: true
+    #includesource: true
     versioningScheme: 'byBuildNumber'
 
 - task: DotNetCoreCLI@2
   displayName: 'push nuget'
   inputs:
     command: 'push'
+    arguments: '--skip-duplicate'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
-    arguments: '--skip-duplicate'
 
 - task: ArchiveFiles@2
   displayName: 'archiv'
