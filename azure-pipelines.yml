@@ -24,29 +24,33 @@ variables:
 - name: Packageappxmanifest
   value: Package.appxmanifest
 
-name: $(BuildDefinitionName)_$(Date:yyMd)$(Rev:.r)
+name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
 steps:
 
 - task: DotNetCoreCLI@2
+  displayName: 'restore'
   inputs:
     command: 'restore'
     projects: '**/*.sln'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
+  displayName: 'build $(buildConfiguration)'
   inputs:
     command: 'build'
     projects: '**/*.sln'
     arguments: '--configuration=$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'build Debug'
   inputs:
     command: 'build'
     projects: '**/*.sln'
     arguments: '--configuration=Debug'
 
 - task: DotNetCoreCLI@2
+  displayName: 'pack nuget'
   inputs:
     command: 'pack'
     packagesToPack: '**/Console.Extensions.csproj;**/Blazor.Console.csproj;'
@@ -61,6 +65,13 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(version).zip'
     replaceExistingArchive: true
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
 
 - task: PublishBuildArtifacts@1
   condition: succeededOrFailed()
