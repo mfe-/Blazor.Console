@@ -73,7 +73,7 @@ steps:
     rootFolderOrFile: '$(appxPackageDir)'
     includeRootFolder: true
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(name).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
     replaceExistingArchive: true
     
 - task: PublishBuildArtifacts@1
