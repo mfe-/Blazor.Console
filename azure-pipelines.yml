@@ -4,8 +4,8 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-#- master
- - azure-pipelines
+- master
+# - azure-pipelines
 
 pool:
   vmImage: 'windows-latest'
@@ -58,14 +58,6 @@ steps:
     includesource: true
     versioningScheme: 'byBuildNumber'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(appxPackageDir)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(version).zip'
-    replaceExistingArchive: true
-
 - task: DotNetCoreCLI@2
   inputs:
     command: 'push'
@@ -73,12 +65,21 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
 
+- task: ArchiveFiles@2
+  displayName: 'archiv'
+  inputs:
+    rootFolderOrFile: '$(appxPackageDir)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(name).zip'
+    replaceExistingArchive: true
+    
 - task: PublishBuildArtifacts@1
-  condition: succeededOrFailed()
+  # condition: succeededOrFailed()
   displayName: "Upload Artifacts"
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'archiv'
+    artifactName: 'a'
 
 #- task: VSBuild@1
 #  inputs:
