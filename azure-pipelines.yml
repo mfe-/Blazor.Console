@@ -67,22 +67,22 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
 
-- task: ArchiveFiles@2
-  displayName: 'archiv'
-  inputs:
-    rootFolderOrFile: '$(appxPackageDir)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
-    replaceExistingArchive: true
-    
-- task: PublishBuildArtifacts@1
-  # condition: succeededOrFailed()
-  displayName: "Upload Artifacts"
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'a'
-
+#- task: ArchiveFiles@2
+#  displayName: 'archiv'
+#  inputs:
+#    rootFolderOrFile: '$(appxPackageDir)'
+#    includeRootFolder: true
+#    archiveType: 'zip'
+#    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
+#    replaceExistingArchive: true
+#    
+#- task: PublishBuildArtifacts@1
+#  # condition: succeededOrFailed()
+#  displayName: "Upload Artifacts"
+#  inputs:
+#    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+#    artifactName: 'a'
+#
 #- task: VSBuild@1
 #  inputs:
 #    solution: '$(solution)'
