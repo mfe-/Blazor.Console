@@ -4,7 +4,8 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-- master
+#- master
+ - azure-pipelines
 
 pool:
   vmImage: 'windows-latest'
@@ -15,7 +16,7 @@ variables:
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
-  value: 'Release|Debug'
+  value: 'Release'
 - name: appxPackageDir
   value: '$(build.artifactStagingDirectory)\AppxPackages\\'
 - name: BuildID
@@ -41,13 +42,32 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'build'
+    projects: '**/*.sln'
+    arguments: '--configuration=Debug'
+
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj'
+    packagesToPack: '**/Console.Extensions.csproj;**/Blazor.Console.csproj;'
     includesymbols: true
     includesource: true
     versioningScheme: 'byBuildNumber'
 
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(appxPackageDir)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(version).zip'
+    replaceExistingArchive: true
 
+- task: PublishBuildArtifacts@1
+  condition: succeededOrFailed()
+  displayName: "Upload Artifacts"
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'archiv'
 
 #- task: VSBuild@1
 #  inputs:
