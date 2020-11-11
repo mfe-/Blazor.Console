@@ -37,10 +37,16 @@ namespace Blazor.Console
         {
             console.ReadRedirectTaskFunc = ReadLineAsync;
             console.StringWriterRedirectTaskFunc = WriteLineAsync;
+            console.OnForegroundColorChanged = OnForegroundColorChanged;
 
             Command = new ConsoleInput();
 
             return base.OnInitializedAsync();
+        }
+        public ConsoleColor CurrentConsoleColor { get; set; }
+        protected void OnForegroundColorChanged(ConsoleColor consoleColor)
+        {
+            CurrentConsoleColor = consoleColor;
         }
         private void BlazorConsoleComponent_CommandInputEvent(object sender, string e)
         {
@@ -80,10 +86,26 @@ namespace Blazor.Console
         {
             return InvokeAsync(() => WriteLinePrivate(consoleInput));
         }
+        private bool isFirstUse = true;
         private Task WriteLinePrivate(string consoleInput)
         {
-            string readLineText = consoleInput;
-            _StringBuilder.AppendLine($"<br>{readLineText}");
+            if (isFirstUse)
+            {
+                //when the app writes the first line make a break
+                consoleInput = $"{consoleInput}{Environment.NewLine}";
+                isFirstUse = false;
+            }
+
+            consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
+
+            if (consoleInput.Contains(Environment.NewLine))
+            {
+                _StringBuilder.AppendLine($"<br>{consoleInput}");
+            }
+            else
+            {
+                _StringBuilder.AppendLine(consoleInput);
+            }
             Output = _StringBuilder.ToString();
             //DisableInput();
             //force rerender of component

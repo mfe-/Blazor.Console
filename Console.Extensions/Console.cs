@@ -8,18 +8,21 @@ namespace Console.Extensions
         static Console()
         {
             //set default redirecter to System.Console.Write/ReadLine
-            StringWriterRedirectTaskFunc = new System.Func<string, Task>((s) => 
-            { 
-                System.Console.WriteLine(s); 
-                return Task.CompletedTask; 
-            });
-            ReadRedirectTaskFunc = new System.Func<Task<string>>(() => 
+            StringWriterRedirectTaskFunc = new System.Func<string, Task>((s) =>
             {
-                var s = System.Console.ReadLine(); 
-                return Task.FromResult(s); 
+                System.Console.WriteLine(s);
+                return Task.CompletedTask;
+            });
+            ReadRedirectTaskFunc = new System.Func<Task<string>>(() =>
+            {
+                var s = System.Console.ReadLine();
+                return Task.FromResult(s);
             });
 
         }
+
+
+
         public static Func<Task<string>> ReadRedirectTaskFunc
         {
             get { return In.ReadRedirectTaskFunc; }
@@ -30,6 +33,7 @@ namespace Console.Extensions
             get { return Out.StringWriterRedirectTaskFunc; }
             set { Out.StringWriterRedirectTaskFunc = value; }
         }
+        public static Action<ConsoleColor> OnForegroundColorChanged { get; set; }
         //
         // Summary:
         //     Gets the standard input stream.
@@ -39,6 +43,10 @@ namespace Console.Extensions
         public static StringReaderRedirect In { get; } = new StringReaderRedirect(null, null);
         public static StringWriterRedirect Out { get; } = new StringWriterRedirect();
 
+        public static void Write(string text)
+        {
+            Out.Write(text);
+        }
         public static void WriteLine(string text)
         {
             Out.WriteLine(text);
@@ -51,5 +59,20 @@ namespace Console.Extensions
         {
             return In.ReadLineAsync();
         }
+        public static void ResetColor()
+        {
+            ForegroundColor = ConsoleColor.Gray;
+        }
+        private static ConsoleColor _ForegroundColor;
+        public static ConsoleColor ForegroundColor
+        {
+            get { return _ForegroundColor; }
+            set
+            {
+                _ForegroundColor = value;
+                OnForegroundColorChanged?.Invoke(_ForegroundColor);
+            }
+        }
+
     }
 }

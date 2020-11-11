@@ -1,0 +1,8 @@
+﻿.Red {
+    color: red;
+}
+
+.Gray {
+    color: black;
+}
+/**works only if the css is referenced in the .razor page. code generated css will be ignored...*/

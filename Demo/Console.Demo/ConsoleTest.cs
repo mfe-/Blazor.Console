@@ -6,6 +6,9 @@ namespace Blazor.Console.Demo
     {
         public static async Task StartAsync()
         {
+            console.ForegroundColor = System.ConsoleColor.Red;
+            console.Write("first peace"); console.Write("second peace");
+            console.ResetColor();
             console.WriteLine("Please enter the name of your cat!");
             //string v = console.ReadLine();
             //for blazor wasm you need to replace console.ReadLine with console.ReadLineAsync()
