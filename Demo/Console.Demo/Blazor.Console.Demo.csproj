@@ -13,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blazor.Console\Blazor.Console.csproj" />
+    <ProjectReference Include="..\..\Console.Extensions.Blazor\Blazor.Console.csproj" />
+    <ProjectReference Include="..\..\Console.Extensions\Console.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

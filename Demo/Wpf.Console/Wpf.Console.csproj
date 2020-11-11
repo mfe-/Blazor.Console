@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blazor.Console\Blazor.Console.csproj" />
+    <ProjectReference Include="..\..\Console.Extensions\Console.Extensions.csproj" />
     <ProjectReference Include="..\ConsoleApp1\ConsoleApp1.csproj" />
   </ItemGroup>
 

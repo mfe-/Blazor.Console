@@ -1,6 +1,5 @@
 ﻿@page "/"
-@using Blazor.Console;
-@using System.Threading;
+@using global::Blazor.Console;
 @using Microsoft.Extensions.Logging;
 
 @inject ILogger<App> _logger
@@ -10,12 +9,12 @@
 
 <p><button @onclick="OnStartConsoleAppClick">start console app</button></p>
 
-<p><Blazor.Console.BlazorConsole Name="fooTest" @ref="console" /></p>
+<p><Blazor.Console.BlazorConsole Name="fooTest" @ref="c" /></p>
 
 
 @code
 {
-    BlazorConsole console;
+    BlazorConsole c;
 
     private void OnStartConsoleAppClick(MouseEventArgs mouseEventArgs)
     {
@@ -23,7 +22,7 @@
         {
             if (a.Exception != null)
             {
-                _logger.LogError(a.Exception,nameof(OnStartConsoleAppClick));
+                _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
             }
         });
     }
