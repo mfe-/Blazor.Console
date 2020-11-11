@@ -26,13 +26,28 @@ variables:
 name: $(BuildDefinitionName)_$(Date:yyMd)$(Rev:.r)
 
 steps:
-- task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
-    arguments: '-InstallPrerelease'
-    restoreSolution: '**/*.sln'
+    projects: '**/*.sln'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: '**/*.sln'
+    arguments: '--configuration=$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    includesymbols: true
+    includesource: true
+    versioningScheme: 'byBuildNumber'
+
+
 
 #- task: VSBuild@1
 #  inputs:
