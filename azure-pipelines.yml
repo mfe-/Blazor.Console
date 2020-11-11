@@ -1,0 +1,91 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+# - azure-pipelines
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- name: solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: buildConfiguration
+  value: 'Release'
+- name: appxPackageDir
+  value: '$(build.artifactStagingDirectory)\AppxPackages\\'
+- name: BuildID
+  value: '$(Build.BuildID)'
+- name: Packageappxmanifest
+  value: Package.appxmanifest
+
+name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: 'restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.sln'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  displayName: 'build $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    projects: '**/*.sln'
+    arguments: '--configuration=$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'build Debug'
+  inputs:
+    command: 'build'
+    projects: '**/*.sln'
+    arguments: '--configuration=Debug'
+
+- task: DotNetCoreCLI@2
+  displayName: 'pack nuget'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/Console.Extensions.csproj;**/Blazor.Console.csproj;'
+    #includesymbols: true
+    #includesource: true
+    versioningScheme: 'byBuildNumber'
+
+- task: DotNetCoreCLI@2
+  displayName: 'push nuget'
+  inputs:
+    command: 'push'
+    arguments: '--skip-duplicate'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
+
+- task: ArchiveFiles@2
+  displayName: 'archiv'
+  inputs:
+    rootFolderOrFile: '$(appxPackageDir)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
+    replaceExistingArchive: true
+    
+- task: PublishBuildArtifacts@1
+  # condition: succeededOrFailed()
+  displayName: "Upload Artifacts"
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'a'
+
+#- task: VSBuild@1
+#  inputs:
+#    solution: '$(solution)'
+#    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
