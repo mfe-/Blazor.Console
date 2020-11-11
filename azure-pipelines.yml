@@ -59,11 +59,13 @@ steps:
     versioningScheme: 'byBuildNumber'
 
 - task: DotNetCoreCLI@2
+  displayName: 'push nuget'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
+    arguments: '--skip-duplicate'
 
 - task: ArchiveFiles@2
   displayName: 'archiv'
