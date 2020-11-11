@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Console.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Rendering;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using console = Console.Extensions.Console;
 
 namespace Blazor.Console
 {
@@ -15,9 +14,9 @@ namespace Blazor.Console
         private readonly StringBuilder _StringBuilder = new StringBuilder();
         protected ConsoleInput Command { get; set; }
         protected string Output = string.Empty;
-        protected string Placeholder { get; set; } //= "Wait for input request.";
-        protected string Disabled { get; set; } = null;// DisabledString;
-        public static readonly string DisabledString = "Disabled";
+        protected string Placeholder { get; set; } = "Wait for input request.";
+        protected string Disabled { get; set; } = DisabledString;
+        public static readonly string DisabledString = null;// "Disabled";
         public event EventHandler<string> CommandInputEvent;
 
         [Parameter] public string Name { get; set; }
@@ -36,86 +35,33 @@ namespace Blazor.Console
 
         protected override Task OnInitializedAsync()
         {
-            _stringWriterRedirect = new StringWriterRedirect() { OnWrite = WriteLine };
-            System.Console.SetOut(_stringWriterRedirect);
-            _stringReaderRedirect = new StringReaderRedirect(ReadAsync, Read);
-            System.Console.SetIn(_stringReaderRedirect);
+            console.ReadRedirectTaskFunc = ReadLineAsync;
+            console.StringWriterRedirectTaskFunc = WriteLineAsync;
 
             Command = new ConsoleInput();
 
             return base.OnInitializedAsync();
         }
-        private bool RecievedInput = false;
         private void BlazorConsoleComponent_CommandInputEvent(object sender, string e)
         {
-            //event will be fired on user input. the user input should be returned by the Read function
-            RecievedInput = true;
+            //event will be fired on user input.
+            CommandTaskCompletionSource?.SetResult(e);
         }
-        private ManualResetEvent manualResetEvent;
-        public string Read()
+        TaskCompletionSource<string> CommandTaskCompletionSource = new TaskCompletionSource<string>();
+        public async Task<string> ReadLineAsync()
         {
-            manualResetEvent = new ManualResetEvent(false);
-            
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerAsync();
-            manualResetEvent.WaitOne(1000);
-
-            //wait until user enterted command and return value.
-            return "ok";
-        }
-
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-        }
-
-        private string ReadPrivate()
-        {
-            return "ok";
-        }
-        public async Task<string> ReadAsync()
-        {
+            CommandTaskCompletionSource = new TaskCompletionSource<string>();
             string result = "";
-            //await Task.Yield(); monitor exception
+            await InvokeAsync(ToggleReadOnly);
             await InvokeAsync(async () =>
             {
-                //await Task.Yield();
-                result = "muh";
+                //wait until the user enterted the command
+                result = await CommandTaskCompletionSource.Task;
             });
+            await InvokeAsync(ToggleReadOnly);
+            CommandTaskCompletionSource = null;
             return result;
         }
-        private async Task<string> ReadPrivateAsync()
-        {
-            this.RecievedInput = false;
-            string result = "";
-            await InvokeAsync(async () =>
-            {
-                do
-                {
-                    result = "okfromloop";
-                } while (this.RecievedInput);
-            });
-            return result;
-        }
-
-
-        //public async Task<String> ReadAsync()
-        //{
-        //    await InvokeAsync(ReadAsync);
-
-        //    //await Task.Yield();
-        //    ////DisableInput();
-
-        //    //await InvokeAsync(() => Task.Delay(800));
-
-        //    //////string r = t.GetAwaiter().GetResult();
-        //    ////Disabled = DisabledString;
-        //    ////StateHasChanged();
-        //    //////return r;
-        //    //return Command.Text + "1";
-
-        //}
 
         protected void OnCommandInputEvent(string inputCommand)
         {
@@ -130,7 +76,7 @@ namespace Blazor.Console
             }
             return Task.CompletedTask;
         }
-        public Task WriteLine(string consoleInput)
+        public Task WriteLineAsync(string consoleInput)
         {
             return InvokeAsync(() => WriteLinePrivate(consoleInput));
         }
@@ -154,17 +100,18 @@ namespace Blazor.Console
             {
                 EnableInput();
             }
+            StateHasChanged();
         }
 
         private void EnableInput()
         {
-            Disabled = null;
+            //Disabled = null;
             Placeholder = "Enter input.";
         }
 
         private void DisableInput()
         {
-            Disabled = DisabledString;
+            //Disabled = DisabledString;
             Placeholder = "Wait for input request.";
         }
 
@@ -172,6 +119,10 @@ namespace Blazor.Console
         {
             _Timer?.Dispose();
             _Timer = null;
+            _stringWriterRedirect?.Dispose();
+            _stringWriterRedirect = null;
+            _stringReaderRedirect?.Dispose();
+            _stringReaderRedirect = null;
         }
     }
 }

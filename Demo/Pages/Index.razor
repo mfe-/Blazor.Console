@@ -1,59 +1,35 @@
 ﻿@page "/"
 @using Blazor.Console;
 @using System.Threading;
+@using Microsoft.Extensions.Logging;
 
+@inject ILogger<App> _logger
 @*<h1>Hello, world!</h1>
 
     Welcome to your new app.*@
 
-<Blazor.Console.BlazorConsole Name="fooTest" @ref="console" />
+<p><button @onclick="OnStartConsoleAppClick">start console app</button></p>
 
-@*<button onclick="@StartConsoleApp();">start console app</button>*@
+<p><Blazor.Console.BlazorConsole Name="fooTest" @ref="console" /></p>
+
 
 @code
 {
     BlazorConsole console;
 
-    private Task StartConsoleApp()
+    private void OnStartConsoleAppClick(MouseEventArgs mouseEventArgs)
     {
-        return InvokeAsync(ConsoleTest.StartAsync);
+        InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
+        {
+            if (a.Exception != null)
+            {
+                _logger.LogError(a.Exception,nameof(OnStartConsoleAppClick));
+            }
+        });
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-
-        //Task.Run(() => ConsoleTest.StartAsync()).ContinueWith(a =>
-        //{
-        //    if (a.Exception != null)
-        //    {
-        //        Console.WriteLine(a.Exception);
-        //    }
-        //}).ConfigureAwait(false);
-
-        //await ConsoleTest.StartAsync();
-
-        InvokeAsync(ConsoleTest.StartAsync);
-
-        //Thread t = new Thread(
-        //async () =>
-        //{
-        //    await ConsoleTest.StartAsync();
-        //});
-        //t.IsBackground = true;
-        //t.Name = "console";
-        //t.Start();
-
-        //ConsoleTest.StartAsync().ConfigureAwait(false);
-
-        //Task.Run(() => console.WriteLine("Task")).ContinueWith(a =>
-        //{
-        //    if (a.Exception != null)
-        //    {
-        //        Console.WriteLine(a.Exception);
-        //    }
-        //}).ConfigureAwait(false);
-
-
         await base.OnAfterRenderAsync(firstRender);
     }
 }

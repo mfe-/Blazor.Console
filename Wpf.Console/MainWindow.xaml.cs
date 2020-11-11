@@ -1,20 +1,11 @@
-﻿using Blazor.Console;
+﻿using Console.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace Wpf.Console
 {
@@ -41,9 +32,9 @@ namespace Wpf.Console
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            _stringWriterRedirect = new StringWriterRedirect() { OnWrite = WriteLine };
+            _stringWriterRedirect = new StringWriterRedirect() { StringWriterRedirectTaskFunc = WriteLine };
             System.Console.SetOut(_stringWriterRedirect);
-            _stringReaderRedirect = new StringReaderRedirect(Read);
+            _stringReaderRedirect = new StringReaderRedirect(Read, null);
             System.Console.SetIn(_stringReaderRedirect);
 
 
@@ -94,7 +85,7 @@ namespace Wpf.Console
 
         private void inputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key==Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 StringTaskCompletionSource?.SetResult(inputTextBox.Text);
                 inputTextBox.Text = String.Empty;

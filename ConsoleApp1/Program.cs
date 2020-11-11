@@ -1,4 +1,4 @@
-﻿using System;
+﻿using console = Console.Extensions.Console;
 
 namespace ConsoleApp1
 {
@@ -8,17 +8,17 @@ namespace ConsoleApp1
         //dont forget to make Main public
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            console.WriteLine("Hello World!");
             Logic();
         }
 
-        public static void Logic()
+        public static async void Logic()
         {
-            Console.WriteLine("Please enter something:");
+            console.WriteLine("Please enter something:");
+            //wasm blazor requires to replace ReadLine with ReadLineAsync
+            string v = console.ReadLine();
 
-            string v = Console.ReadLine();
-
-            System.Console.WriteLine($"You enterted {v}");
+            console.WriteLine($"You enterted {v}");
 
         }
     }

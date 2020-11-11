@@ -1,30 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
+using console = Console.Extensions.Console;
 namespace Blazor.Console.Demo
 {
     public class ConsoleTest
     {
-        public static Task StartAsync()
+        public static async Task StartAsync()
         {
-            bool ask = false;
-            do
-            {
-                System.Console.WriteLine("Please enter the name of your cat!");
-                string v = System.Console.ReadLine();
-                System.Console.WriteLine($"The name of your cat is {v}");
-                if (v == "charly")
-                {
-                    ask = false;
-                }
-            }
-            while (ask) ;
-
-            System.Console.WriteLine("After ReadLine loop");
-
-            return Task.CompletedTask;
+            console.WriteLine("Please enter the name of your cat!");
+            //string v = console.ReadLine();
+            //for blazor wasm you need to replace console.ReadLine with console.ReadLineAsync()
+            string v = await console.ReadLineAsync();
+            console.WriteLine($"The name of your cat is {v}");
         }
     }
 }
