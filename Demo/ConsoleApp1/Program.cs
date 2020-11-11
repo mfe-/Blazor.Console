@@ -8,6 +8,7 @@ namespace ConsoleApp1
         //dont forget to make Main public
         public static void Main(string[] args)
         {
+            console.WriteLine();
             console.WriteLine("Hello World!");
             Logic();
         }

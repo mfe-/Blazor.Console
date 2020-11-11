@@ -97,12 +97,12 @@ namespace Blazor.Console
             }
 
             consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
-
-            if (consoleInput.Contains(Environment.NewLine))
-            {
-                _StringBuilder.AppendLine($"<br>{consoleInput}");
-            }
-            else
+            consoleInput = consoleInput.Replace(Environment.NewLine, "<br>");
+            //if (consoleInput.Contains(Environment.NewLine))
+            //{
+            //    _StringBuilder.AppendLine($"<br>{consoleInput}");
+            //}
+            //else
             {
                 _StringBuilder.AppendLine(consoleInput);
             }

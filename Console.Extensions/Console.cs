@@ -47,7 +47,15 @@ namespace Console.Extensions
         {
             Out.Write(text);
         }
+        public static void WriteLine()
+        {
+            Out.WriteLine("");
+        }
         public static void WriteLine(string text)
+        {
+            Out.WriteLine(text);
+        }
+        public static void WriteLine(Exception text)
         {
             Out.WriteLine(text);
         }
