@@ -64,6 +64,8 @@ namespace Blazor.Console
             {
                 //wait until the user enterted the command
                 result = await CommandTaskCompletionSource.Task;
+                //display the users input
+                await WriteLineAsync(result);
             });
             await InvokeAsync(ToggleReadOnly);
             CommandTaskCompletionSource = null;
