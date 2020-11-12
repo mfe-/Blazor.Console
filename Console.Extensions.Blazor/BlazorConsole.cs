@@ -1,6 +1,7 @@
 ﻿using Console.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using System;
 using System.Text;
 using System.Threading;
@@ -76,7 +77,7 @@ namespace Blazor.Console
         {
             CommandInputEvent?.Invoke(this, inputCommand);
         }
-        protected Task Execute(EditContext context)
+        protected Task OnInputSubmit(EditContext context)
         {
             if (context?.Model is ConsoleInput consoleInput)
             {
