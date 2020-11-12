@@ -2,6 +2,9 @@
 
 The goal of this project is to make it easy to move existing console application to blazor web assembly.
 
+[![Console.Extensions package in get-the-solution feed in Azure Artifacts](https://feeds.dev.azure.com/get-the-solution/_apis/public/Packaging/Feeds/3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb/Packages/89bd64e7-4569-44b5-946f-6830e6ac5694/Badge)](https://dev.azure.com/get-the-solution/get-the-solution/_packaging?_a=package&feed=3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb&package=89bd64e7-4569-44b5-946f-6830e6ac5694&preferRelease=true)
+[![Blazor.Console package in get-the-solution feed in Azure Artifacts](https://feeds.dev.azure.com/get-the-solution/_apis/public/Packaging/Feeds/3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb/Packages/a528640f-a94c-48f1-acf8-feadc8c46001/Badge)](https://dev.azure.com/get-the-solution/get-the-solution/_packaging?_a=package&feed=3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb&package=a528640f-a94c-48f1-acf8-feadc8c46001&preferRelease=true)
+
 ## Sample Demo
 
 
