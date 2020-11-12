@@ -12,7 +12,8 @@ namespace Console.Extensions
     /// </remarks>
     public class StringWriterRedirect : StringWriter
     {
-        public Func<String,Task> StringWriterRedirectTaskFunc;
+        public Func<String, Task> StringWriterLineRedirectTaskFunc;
+        public Func<String, Task> StringWriterRedirectTaskFunc;
 
         private Task WriteGeneric<T>(T value) { return StringWriterRedirectTaskFunc?.Invoke(value.ToString()); }
 
@@ -23,7 +24,7 @@ namespace Console.Extensions
         public override async void Write(double value) { await WriteGeneric<double>(value); }
         public override async void Write(long value) { await WriteGeneric<long>(value); }
 
-        private Task WriteLineGeneric<T>(T value) { return StringWriterRedirectTaskFunc?.Invoke($"{value}\n") ?? Task.CompletedTask; }
+        private Task WriteLineGeneric<T>(T value) { return StringWriterLineRedirectTaskFunc?.Invoke(value.ToString()) ?? Task.CompletedTask; }
         public override async void WriteLine(char value) { await WriteLineGeneric<char>(value); }
         public override async void WriteLine(string value) { await WriteLineGeneric<string>(value); }
         public override async void WriteLine(bool value) { await WriteLineGeneric<bool>(value); }

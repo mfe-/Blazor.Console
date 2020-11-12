@@ -8,9 +8,14 @@ namespace Console.Extensions
         static Console()
         {
             //set default redirecter to System.Console.Write/ReadLine
-            StringWriterRedirectTaskFunc = new System.Func<string, Task>((s) =>
+            StringWriterLineRedirectTaskFunc = new System.Func<string, Task>((s) =>
             {
                 System.Console.WriteLine(s);
+                return Task.CompletedTask;
+            });
+            StringWriterRedirectTaskFunc = new System.Func<string, Task>((s) =>
+            {
+                System.Console.Write(s);
                 return Task.CompletedTask;
             });
             ReadRedirectTaskFunc = new System.Func<Task<string>>(() =>
@@ -27,6 +32,11 @@ namespace Console.Extensions
         {
             get { return In.ReadRedirectTaskFunc; }
             set { In.ReadRedirectTaskFunc = value; }
+        }
+        public static Func<String, Task> StringWriterLineRedirectTaskFunc
+        {
+            get { return Out.StringWriterLineRedirectTaskFunc; }
+            set { Out.StringWriterLineRedirectTaskFunc = value; }
         }
         public static Func<String, Task> StringWriterRedirectTaskFunc
         {
@@ -78,6 +88,7 @@ namespace Console.Extensions
             set
             {
                 _ForegroundColor = value;
+                System.Console.ForegroundColor = _ForegroundColor;
                 OnForegroundColorChanged?.Invoke(_ForegroundColor);
             }
         }

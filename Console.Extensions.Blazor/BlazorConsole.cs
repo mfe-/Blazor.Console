@@ -36,7 +36,8 @@ namespace Blazor.Console
         protected override Task OnInitializedAsync()
         {
             console.ReadRedirectTaskFunc = ReadLineAsync;
-            console.StringWriterRedirectTaskFunc = WriteLineAsync;
+            console.StringWriterLineRedirectTaskFunc = WriteLineAsync;
+            console.StringWriterRedirectTaskFunc = WriteAsync;
             console.OnForegroundColorChanged = OnForegroundColorChanged;
 
             Command = new ConsoleInput();
@@ -82,12 +83,16 @@ namespace Blazor.Console
             }
             return Task.CompletedTask;
         }
-        public Task WriteLineAsync(string consoleInput)
+        public Task WriteLineAsync(string consoleInput = "")
         {
             return InvokeAsync(() => WriteLinePrivate(consoleInput));
         }
+        public Task WriteAsync(string consoleInput)
+        {
+            return InvokeAsync(() => WriteLinePrivate(consoleInput, false));
+        }
         private bool isFirstUse = true;
-        private Task WriteLinePrivate(string consoleInput)
+        private Task WriteLinePrivate(string consoleInput, bool newline = true)
         {
             if (isFirstUse)
             {
@@ -97,12 +102,11 @@ namespace Blazor.Console
             }
 
             consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
-            consoleInput = consoleInput.Replace(Environment.NewLine, "<br>");
-            //if (consoleInput.Contains(Environment.NewLine))
-            //{
-            //    _StringBuilder.AppendLine($"<br>{consoleInput}");
-            //}
-            //else
+            if (newline)
+            {
+                _StringBuilder.AppendLine($"{consoleInput}</br>");
+            }
+            else
             {
                 _StringBuilder.AppendLine(consoleInput);
             }

@@ -32,7 +32,11 @@ namespace Wpf.Console
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            _stringWriterRedirect = new StringWriterRedirect() { StringWriterRedirectTaskFunc = WriteLine };
+            _stringWriterRedirect = new StringWriterRedirect()
+            {
+                StringWriterLineRedirectTaskFunc = WriteLine,
+                StringWriterRedirectTaskFunc = Write
+            };
             System.Console.SetOut(_stringWriterRedirect);
             _stringReaderRedirect = new StringReaderRedirect(Read, null);
             System.Console.SetIn(_stringReaderRedirect);
@@ -50,11 +54,27 @@ namespace Wpf.Console
 
 
         }
+        public Task Write(string s)
+        {
+            return WriteLinePrivate(s, false);
+        }
+        public Task WriteLine(string s)
+        {
+            return WriteLinePrivate(s);
+        }
         SynchronizationContext SynchronizationContext = SynchronizationContext.Current;
-        public Task WriteLine(string consoleInput)
+        private Task WriteLinePrivate(string consoleInput, bool newline = true)
         {
             string readLineText = consoleInput;
-            _StringBuilder.AppendLine(readLineText);
+            if(newline)
+            {
+                _StringBuilder.AppendLine(readLineText);
+            }
+            else
+            {
+                _StringBuilder.Append(readLineText);
+            }
+            
             if (SynchronizationContext.Current != this.SynchronizationContext)
             {
                 //because outputTextBox is handled by a diffrent thread use synchronizationcontext to post operation on original thread

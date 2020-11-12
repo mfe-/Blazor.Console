@@ -10,6 +10,16 @@ namespace ConsoleApp1
         {
             console.WriteLine();
             console.WriteLine("Hello World!");
+
+            console.Write("a"); console.Write("b");
+
+            console.WriteLine();
+            console.WriteLine("Options:");
+            console.WriteLine("  --h               show help.");
+            console.WriteLine("  --info            show system info.");
+            console.WriteLine("  --new             create a new instance.");
+            console.WriteLine();
+
             Logic();
         }
 
