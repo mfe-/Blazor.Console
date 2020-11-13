@@ -9,6 +9,8 @@
     <DebugSymbols>true</DebugSymbols>
     <EmbedAllSources>true</EmbedAllSources>
     <DebugType>portable</DebugType>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 
