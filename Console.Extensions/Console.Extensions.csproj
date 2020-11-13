@@ -10,6 +10,7 @@
     <DebugType>portable</DebugType>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <PackageId>Console.Extensions</PackageId>
   </PropertyGroup>
 
 </Project>
