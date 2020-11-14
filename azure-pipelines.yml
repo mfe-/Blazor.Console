@@ -105,7 +105,7 @@ steps:
   displayName: 'pack nuget'
   inputs:
     command: 'pack'
-    packagesToPack: '**/Console.Extensions.csproj;**/Blazor.Console.csproj;'
+    packagesToPack: '**/Console.Extensions.csproj;**/Blzr.Console.csproj;'
     #includesymbols: true
     #includesource: true
     versioningScheme: 'byBuildNumber'
@@ -119,20 +119,22 @@ steps:
     nuGetFeedType: 'internal'
     publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
 
+- task: ArchiveFiles@2
+  displayName: 'archiv'
+  inputs:
+   rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
+    replaceExistingArchive: true
+
 - task: PublishBuildArtifacts@1
   condition: succeededOrFailed()
   displayName: "Upload Artifacts"
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/a.zip' 
 
-#- task: ArchiveFiles@2
-#  displayName: 'archiv'
-#  inputs:
-#    rootFolderOrFile: '$(appxPackageDir)'
-#    includeRootFolder: true
-#    archiveType: 'zip'
-#    archiveFile: '$(Build.ArtifactStagingDirectory)/a.zip'
-#    replaceExistingArchive: true
+
 #    
 #- task: PublishBuildArtifacts@1
 #  # condition: succeededOrFailed()
