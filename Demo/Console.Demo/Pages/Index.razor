@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using global::Blazor.Console;
+@using global::Blzr.Console;
 @using Microsoft.Extensions.Logging;
 
 @inject ILogger<App> _logger
@@ -9,7 +9,13 @@
 
 <p><button @onclick="OnStartConsoleAppClick">start console app</button></p>
 @*<button onclick=@(async () =>await DeleteAllCustomers())>Delete all customers</button>*@
-<p><Blazor.Console.BlazorConsole Name="fooTest" @ref="c" /></p>
+<p>
+    <Blzr.Console.BlazorConsole @ref="c"
+                                Name="fooTest"
+                                ShowRepositoryUrl="true" 
+                                AutoScroll="true"
+                                SetAutoFocusToConsoleInput="true"/>
+</p>
 
 
 @code

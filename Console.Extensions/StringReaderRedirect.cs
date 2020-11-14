@@ -6,17 +6,17 @@ namespace Console.Extensions
 {
     public class StringReaderRedirect : StringReader
     {
-        public StringReaderRedirect(Func<Task<string>> readredirect) : this(readredirect,null)
+        public StringReaderRedirect(Func<Task<string>> readredirectAsync) : this(readredirectAsync,null)
         {
-            ReadRedirectTaskFunc = readredirect;
+            ReadRedirectTaskFunc = readredirectAsync;
         }
-        public StringReaderRedirect(Func<Task<string>> readredirect, Func<string> readTask) : base("foo")
+        public StringReaderRedirect(Func<Task<string>>? readredirectAsync, Func<string>? readTask) : base("foo")
         {
-            ReadRedirectTaskFunc = readredirect;
+            ReadRedirectTaskFunc = readredirectAsync;
             ReadRedirectFunc = readTask;
         }
-        public Func<Task<string>> ReadRedirectTaskFunc { get; set; }
-        public Func<string> ReadRedirectFunc { get; set; }
+        public Func<Task<string>>? ReadRedirectTaskFunc { get; set; }
+        public Func<string>? ReadRedirectFunc { get; set; }
 
         public override string ReadLine()
         {
@@ -31,15 +31,15 @@ namespace Console.Extensions
             if (ReadRedirectTaskFunc != null)
             {
                 if (ReadRedirectTaskFunc == null) throw new ArgumentNullException($"Please set {nameof(ReadRedirectTaskFunc)}", nameof(ReadRedirectTaskFunc));
-                Task<string> task = ReadRedirectTaskFunc?.Invoke();
-                return task?.ConfigureAwait(false).GetAwaiter().GetResult();
+                Task<string> task = ReadRedirectTaskFunc.Invoke();
+                return task.ConfigureAwait(false).GetAwaiter().GetResult();
             }
             throw new ArgumentNullException($"Please set {nameof(ReadRedirectTaskFunc)} or {nameof(ReadRedirectFunc)}");
         }
         public override Task<string> ReadLineAsync()
         {
             if (ReadRedirectTaskFunc == null) throw new ArgumentNullException($"Please set {nameof(ReadRedirectTaskFunc)}", nameof(ReadRedirectTaskFunc));
-            return ReadRedirectTaskFunc?.Invoke();
+            return ReadRedirectTaskFunc.Invoke();
         }
         public override int Read()
         {

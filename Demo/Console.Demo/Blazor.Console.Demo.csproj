@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Console.Extensions.Blazor\Blazor.Console.csproj" />
+    <ProjectReference Include="..\..\Console.Extensions.Blazor\Blzr.Console.csproj" />
     <ProjectReference Include="..\..\Console.Extensions\Console.Extensions.csproj" />
   </ItemGroup>
 

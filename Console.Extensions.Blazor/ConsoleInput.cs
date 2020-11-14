@@ -1,4 +1,4 @@
-﻿namespace Blazor.Console
+﻿namespace Blzr.Console
 {
     public class ConsoleInput
     {

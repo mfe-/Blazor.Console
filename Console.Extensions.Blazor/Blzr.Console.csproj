@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Provides a blazor webassembly component for transformed console applications. It displays the output of the wrapped System.Console.WriteLine calls and provides an input for System.Console.ReadLineAsync</Description>

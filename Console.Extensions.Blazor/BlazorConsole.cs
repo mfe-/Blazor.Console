@@ -8,33 +8,42 @@ using System.Threading;
 using System.Threading.Tasks;
 using console = Console.Extensions.Console;
 
-namespace Blazor.Console
+namespace Blzr.Console
 {
     public partial class BlazorConsoleComponent : ComponentBase, IDisposable
     {
         private readonly StringBuilder _StringBuilder = new StringBuilder();
-        protected ConsoleInput Command { get; set; }
+        protected ConsoleInput? Command { get; set; }
         protected string Output = string.Empty;
         protected string Placeholder { get; set; } = "Wait for input request.";
-        protected string Disabled { get; set; } = DisabledString;
-        public static readonly string DisabledString = null;// "Disabled";
-        public event EventHandler<string> CommandInputEvent;
+        protected string? Disabled { get; set; } = DisabledString;
+        public static readonly string? DisabledString = null;// "Disabled";
+        public event EventHandler<string>? ConsoleInputEvent;
 
-        [Parameter] public string Name { get; set; }
+        [Parameter]
+        public bool ShowRepositoryUrl { get; set; } = true;
+        [Parameter]
+        public string? Name { get; set; }
         public string Version() => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        protected StringWriterRedirect _stringWriterRedirect;
-        protected StringReaderRedirect _stringReaderRedirect;
-        private Timer _Timer;
+        protected StringWriterRedirect? _stringWriterRedirect;
+        protected StringReaderRedirect? _stringReaderRedirect;
+        private Timer? _Timer;
         protected override void OnInitialized()
         {
             //refresh ui every 800ms
             _Timer = new Timer(_ => InvokeAsync(StateHasChanged), null, 800, 800);
-            CommandInputEvent += BlazorConsoleComponent_CommandInputEvent;
+            ConsoleInputEvent += BlazorConsoleComponent_CommandInputEvent;
             base.OnInitialized();
         }
-
-        protected override Task OnInitializedAsync()
+        [Parameter]
+        public bool SetAutoFocusToConsoleInput { get; set; } = true;
+        /// <summary>
+        /// Invoked when the component is initialized after having received its initial parameters 
+        /// from its parent component in <seealso cref="OnParametersSetAsync"/>
+        /// </summary>
+        /// <returns></returns>
+        protected override async Task OnInitializedAsync()
         {
             console.ReadRedirectTaskFunc = ReadLineAsync;
             console.StringWriterLineRedirectTaskFunc = WriteLineAsync;
@@ -43,19 +52,23 @@ namespace Blazor.Console
 
             Command = new ConsoleInput();
 
-            return base.OnInitializedAsync();
+            await base.OnInitializedAsync();
         }
-        public ConsoleColor CurrentConsoleColor { get; set; }
+        public ConsoleColor CurrentConsoleColor { get; set; } = ConsoleColor.Gray;
         protected void OnForegroundColorChanged(ConsoleColor consoleColor)
         {
             CurrentConsoleColor = consoleColor;
         }
+        /// <summary>
+        /// Event will be fired on user input.
+        /// </summary>
+        /// <param name="sender">The object which fired the event</param>
+        /// <param name="e">The user input</param>
         private void BlazorConsoleComponent_CommandInputEvent(object sender, string e)
         {
-            //event will be fired on user input.
             CommandTaskCompletionSource?.SetResult(e);
         }
-        TaskCompletionSource<string> CommandTaskCompletionSource = new TaskCompletionSource<string>();
+        TaskCompletionSource<string>? CommandTaskCompletionSource = new TaskCompletionSource<string>();
         public async Task<string> ReadLineAsync()
         {
             CommandTaskCompletionSource = new TaskCompletionSource<string>();
@@ -72,16 +85,24 @@ namespace Blazor.Console
             CommandTaskCompletionSource = null;
             return result;
         }
-
-        protected void OnCommandInputEvent(string inputCommand)
+        /// <summary>
+        /// Fires the <seealso cref="ConsoleInputEvent"/> event
+        /// </summary>
+        /// <param name="inputCommand">The user input</param>
+        protected void OnConsoleInputEvent(string inputCommand)
         {
-            CommandInputEvent?.Invoke(this, inputCommand);
+            ConsoleInputEvent?.Invoke(this, inputCommand);
         }
-        protected Task OnInputSubmit(EditContext context)
+        /// <summary>
+        /// Will be executed on user input
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        protected Task OnConsoleInputSubmit(EditContext context)
         {
             if (context?.Model is ConsoleInput consoleInput)
             {
-                OnCommandInputEvent(consoleInput.Text);
+                OnConsoleInputEvent(consoleInput.Text);
                 consoleInput.Text = string.Empty;
             }
             return Task.CompletedTask;
@@ -94,13 +115,18 @@ namespace Blazor.Console
         {
             return InvokeAsync(() => WriteLinePrivate(consoleInput, false));
         }
+        [Parameter]
+        public bool AutoScroll { get; set; } = true;
+        [Inject]
+        protected IJSRuntime? JSRuntime { get; set; }
         private bool isFirstUse = true;
-        private Task WriteLinePrivate(string consoleInput, bool newline = true)
+        protected string ConsoleInputId = "consoleInput";
+        private async Task WriteLinePrivate(string consoleInput, bool newline = true)
         {
             if (isFirstUse)
             {
                 //when the app writes the first line make a break
-                consoleInput = $"{consoleInput}{Environment.NewLine}";
+                consoleInput = $"</br>{consoleInput}";
                 isFirstUse = false;
             }
 
@@ -117,7 +143,14 @@ namespace Blazor.Console
             //DisableInput();
             //force rerender of component
             StateHasChanged();
-            return Task.CompletedTask;
+            if(AutoScroll)
+            {
+                await JSRuntime.InvokeVoidAsync("BlazorConsole.scrollToBottom");
+            }
+            if (SetAutoFocusToConsoleInput)
+            {
+                await JSRuntime.InvokeVoidAsync("BlazorConsole.setFocusToElement", ConsoleInputId);
+            }
         }
         public void ToggleReadOnly()
         {

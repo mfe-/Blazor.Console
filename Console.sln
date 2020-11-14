@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Console", "Console.Extensions.Blazor\Blazor.Console.csproj", "{FE8E4793-A616-4599-9900-8EB839A0D251}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blzr.Console", "Console.Extensions.Blazor\Blzr.Console.csproj", "{FE8E4793-A616-4599-9900-8EB839A0D251}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Console.Demo", "Demo\Console.Demo\Blazor.Console.Demo.csproj", "{B54977A2-C60E-425B-8BC5-B1AB17BCE07F}"
 EndProject

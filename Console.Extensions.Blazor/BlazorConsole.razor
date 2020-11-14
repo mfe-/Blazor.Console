@@ -1,16 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
-@using global::Blazor.Console;
+@using global::Blzr.Console;
+@using Microsoft.JSInterop;
 
 @inject IServiceProvider ServiceProvider
 @*@inject IRunningCommand RunningCommand*@
-
-@inherits Blazor.Console.BlazorConsoleComponent
+@inject IJSRuntime JS;
+@inherits Blzr.Console.BlazorConsoleComponent
 
 <div id="console">
-    <br>>@Name @System.DateTimeOffset.Now.ToString("dd MMMM yyyy HH:mm:ss \"GMT\"zzz", System.Globalization.CultureInfo.InvariantCulture)
-    <br>><a href="https://github.com/mfe-/Blazor.Console/" target="_blank">Blazor.Console</a> [Version @Version()]
-    <code>@((MarkupString)Output)</code>
-    <EditForm OnValidSubmit="OnInputSubmit" autocomplete="off" Model="Command" novalidate>
-        <InputText id="commandline" autocomplete="off" Class="cmdline" disabled="@Disabled" placeholder="@Placeholder" @bind-Value="@Command.Text" />
-    </EditForm>
+    <code>
+        @Name @System.DateTimeOffset.Now.ToString("dd MMMM yyyy HH:mm:ss \"GMT\"zzz", System.Globalization.CultureInfo.InvariantCulture)<br>
+        <a href="https://github.com/mfe-/Blazor.Console/" style="@(ShowRepositoryUrl ? null : "display:none")" target="_blank">Blzr.Console</a> [Version @Version()]<br>
+        <br>
+        @((MarkupString)Output)
+        <EditForm OnValidSubmit="OnConsoleInputSubmit" autocomplete="off" Model="Command" novalidate>
+            <InputText id="@ConsoleInputId" autocomplete="off" disabled="@Disabled" placeholder="@Placeholder" @bind-Value="@Command.Text" />
+        </EditForm>
+    </code>
 </div>
