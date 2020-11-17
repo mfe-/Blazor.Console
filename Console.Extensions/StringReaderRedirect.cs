@@ -20,13 +20,14 @@ namespace Console.Extensions
 
         public override string ReadLine()
         {
-            if ("web".Equals(System.Runtime.InteropServices.RuntimeInformation.OSDescription, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new PlatformNotSupportedException("Please exchange the call console.ReadLine with await console.ReadLineAsync!");
-            }
             if (ReadRedirectFunc != null)
             {
                 return ReadRedirectFunc.Invoke();
+            }
+            //determine which platform is calling this method
+            if ("web".Equals(System.Runtime.InteropServices.RuntimeInformation.OSDescription, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PlatformNotSupportedException("Please exchange the call console.ReadLine with await console.ReadLineAsync!");
             }
             if (ReadRedirectTaskFunc != null)
             {

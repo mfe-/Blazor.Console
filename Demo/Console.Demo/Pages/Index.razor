@@ -14,7 +14,8 @@
                                 Name="fooTest"
                                 ShowRepositoryUrl="true" 
                                 AutoScroll="true"
-                                SetAutoFocusToConsoleInput="true"/>
+                                SetAutoFocusToConsoleInput="true"
+                                UseOriginalSystemConsole="true"/>
 </p>
 
 
@@ -24,14 +25,22 @@
 
     private void OnStartConsoleAppClick(MouseEventArgs mouseEventArgs)
     {
-        c.WriteLineAsync();
-        InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
+        //c.WriteLineAsync();
+        //InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
+        //{
+        //    if (a.Exception != null)
+        //    {
+        //        _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
+        //    }
+        //});
+        InvokeAsync(SystemConsoleTest.StartAsync).ContinueWith(a =>
         {
             if (a.Exception != null)
             {
                 _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
             }
         });
+
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)

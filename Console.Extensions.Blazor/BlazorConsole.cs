@@ -24,6 +24,8 @@ namespace Blzr.Console
         public bool ShowRepositoryUrl { get; set; } = true;
         [Parameter]
         public string? Name { get; set; }
+        [Parameter]
+        public bool UseOriginalSystemConsole { get; set; } = false;
         public string Version() => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         protected StringWriterRedirect? _stringWriterRedirect;
@@ -45,10 +47,25 @@ namespace Blzr.Console
         /// <returns></returns>
         protected override async Task OnInitializedAsync()
         {
-            console.ReadRedirectTaskFunc = ReadLineAsync;
-            console.StringWriterLineRedirectTaskFunc = WriteLineAsync;
-            console.StringWriterRedirectTaskFunc = WriteAsync;
-            console.OnForegroundColorChanged = OnForegroundColorChanged;
+            if (!UseOriginalSystemConsole)
+            {
+                console.ReadRedirectTaskFunc = ReadLineAsync;
+                console.StringWriterLineRedirectTaskFunc = WriteLineAsync;
+                console.StringWriterRedirectTaskFunc = WriteAsync;
+                console.OnForegroundColorChanged = OnForegroundColorChanged;
+            }
+            else
+            {
+                _stringReaderRedirect = new StringReaderRedirect(null, ReadLine);
+                System.Console.SetIn(_stringReaderRedirect);
+                _stringWriterRedirect = new StringWriterRedirect()
+                {
+                    StringWriterLineRedirectTaskFunc = WriteLineAsync,
+                    StringWriterRedirectTaskFunc = WriteAsync
+                };
+                System.Console.SetOut(_stringWriterRedirect);
+            }
+
 
             Command = new ConsoleInput();
 
@@ -84,6 +101,14 @@ namespace Blzr.Console
             await InvokeAsync(ToggleReadOnly);
             CommandTaskCompletionSource = null;
             return result;
+        }
+        public string ReadLine()
+        {
+            if (JSRuntime is IJSInProcessRuntime inProcessRuntime)
+            {
+                return inProcessRuntime.Invoke<string>("BlazorConsole.readLine");
+            }
+            else throw new InvalidCastException("Could not cast JSRuntime to IJSInProcessRuntime");
         }
         /// <summary>
         /// Fires the <seealso cref="ConsoleInputEvent"/> event
@@ -143,7 +168,7 @@ namespace Blzr.Console
             //DisableInput();
             //force rerender of component
             StateHasChanged();
-            if(AutoScroll)
+            if (AutoScroll)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.scrollToBottom");
             }

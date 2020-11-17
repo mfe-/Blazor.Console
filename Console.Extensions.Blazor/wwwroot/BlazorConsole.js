@@ -8,5 +8,9 @@ window.BlazorConsole = {
     setFocusToElement: function (elementId) {
         const element = document.getElementById(elementId);
         element.focus();
+    },
+    readLine: function (msg) {
+        input = window.prompt(msg);
+        return input;
     }
 };
