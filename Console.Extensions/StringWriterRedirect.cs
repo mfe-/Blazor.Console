@@ -18,7 +18,14 @@ namespace Console.Extensions
         private Task WriteGeneric<T>(T value)
         {
             if (value == null) return Task.CompletedTask;
-            return StringWriterRedirectTaskFunc?.Invoke(value.ToString());
+            if (value is char[] chararr)
+            {
+                return StringWriterRedirectTaskFunc?.Invoke(new string(chararr));
+            }
+            else
+            {
+                return StringWriterRedirectTaskFunc?.Invoke(value.ToString());
+            }
         }
 
         public override async void Write(char value) { await WriteGeneric<char>(value); }

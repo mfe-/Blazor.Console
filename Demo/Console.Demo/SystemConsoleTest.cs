@@ -13,7 +13,7 @@ namespace Blazor.Console.Demo
             var content = await response.Content.ReadAsStringAsync();
             System.Console.WriteLine(content);
 
-            System.Console.ForegroundColor = System.ConsoleColor.Red;
+            //System.Console.ForegroundColor = System.ConsoleColor.Red;
 
             System.Console.WriteLine();
             System.Console.WriteLine("Options:");
@@ -26,7 +26,7 @@ namespace Blazor.Console.Demo
          
             System.Console.Write("first peace"); System.Console.Write("second peace");
             System.Console.WriteLine();
-            System.Console.ResetColor();
+            //System.Console.ResetColor();
             System.Console.WriteLine("Please enter the name of your cat!");
             //string v = console.ReadLine();
             //for blazor wasm you need to replace console.ReadLine with console.ReadLineAsync()

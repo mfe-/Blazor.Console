@@ -12,39 +12,37 @@
 <p>
     <Blzr.Console.BlazorConsole @ref="c"
                                 Name="fooTest"
-                                ShowRepositoryUrl="true" 
+                                ShowRepositoryUrl="true"
                                 AutoScroll="true"
                                 SetAutoFocusToConsoleInput="true"
-                                UseOriginalSystemConsole="true"/>
+                                UseOriginalSystemConsole="true" />
 </p>
 
 
 @code
-{
-    BlazorConsole c;
+{ BlazorConsole c;
 
-    private void OnStartConsoleAppClick(MouseEventArgs mouseEventArgs)
-    {
-        //c.WriteLineAsync();
-        //InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
-        //{
-        //    if (a.Exception != null)
-        //    {
-        //        _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
-        //    }
-        //});
-        InvokeAsync(SystemConsoleTest.StartAsync).ContinueWith(a =>
-        {
-            if (a.Exception != null)
+            private void OnStartConsoleAppClick(MouseEventArgs mouseEventArgs)
             {
-                _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
+                //c.WriteLineAsync();
+                //InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
+                //{
+                //    if (a.Exception != null)
+                //    {
+                //        _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
+                //    }
+                //});
+                InvokeAsync(SystemConsoleTest.StartAsync).ContinueWith(a =>
+                {
+                    if (a.Exception != null)
+                    {
+                        _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
+                    }
+                });
+
             }
-        });
 
-    }
-
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-    }
-}
+            protected async override Task OnAfterRenderAsync(bool firstRender)
+            {
+                await base.OnAfterRenderAsync(firstRender);
+            } }

@@ -79,7 +79,14 @@ namespace Console.Extensions
         }
         public static void ResetColor()
         {
-            ForegroundColor = ConsoleColor.Gray;
+            try
+            {
+                ForegroundColor = ConsoleColor.Gray;
+            }
+            catch(PlatformNotSupportedException)
+            {
+                //nothing we can do here about this
+            }
         }
         private static ConsoleColor _ForegroundColor;
         public static ConsoleColor ForegroundColor
@@ -88,7 +95,14 @@ namespace Console.Extensions
             set
             {
                 _ForegroundColor = value;
-                System.Console.ForegroundColor = _ForegroundColor;
+                try
+                {
+                    System.Console.ForegroundColor = _ForegroundColor;
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    //nothing we can do here about this
+                }
                 OnForegroundColorChanged?.Invoke(_ForegroundColor);
             }
         }

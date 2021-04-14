@@ -26,7 +26,7 @@ namespace Blzr.Console
         public string? Name { get; set; }
         [Parameter]
         public bool UseOriginalSystemConsole { get; set; } = false;
-        public string Version() => System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string? Version() => System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
 
         protected StringWriterRedirect? _stringWriterRedirect;
         protected StringReaderRedirect? _stringReaderRedirect;
@@ -168,7 +168,7 @@ namespace Blzr.Console
             //DisableInput();
             //force rerender of component
             StateHasChanged();
-            if (AutoScroll)
+            if(AutoScroll)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.scrollToBottom");
             }
