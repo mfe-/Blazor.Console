@@ -28,22 +28,23 @@ namespace Console.Extensions
 
 
 
-        public static Func<Task<string>> ReadRedirectTaskFunc
+        public static Func<Task<string>>? ReadRedirectTaskFunc
         {
             get { return In.ReadRedirectTaskFunc; }
             set { In.ReadRedirectTaskFunc = value; }
         }
-        public static Func<String, Task> StringWriterLineRedirectTaskFunc
+        public static Func<String, Task>? StringWriterLineRedirectTaskFunc
         {
             get { return Out.StringWriterLineRedirectTaskFunc; }
             set { Out.StringWriterLineRedirectTaskFunc = value; }
         }
-        public static Func<String, Task> StringWriterRedirectTaskFunc
+        public static Func<String, Task>? StringWriterRedirectTaskFunc
         {
             get { return Out.StringWriterRedirectTaskFunc; }
             set { Out.StringWriterRedirectTaskFunc = value; }
         }
         public static Action<ConsoleColor> OnForegroundColorChanged { get; set; }
+        public static Action? OnClearAction { get; set; }
         //
         // Summary:
         //     Gets the standard input stream.
@@ -105,6 +106,18 @@ namespace Console.Extensions
                 }
                 OnForegroundColorChanged?.Invoke(_ForegroundColor);
             }
+        }
+        public static void Clear()
+        {
+            try
+            {
+                System.Console.Clear();
+            }
+            catch (PlatformNotSupportedException)
+            {
+                //nothing we can do here about this
+            }
+            OnClearAction?.Invoke();
         }
 
     }
