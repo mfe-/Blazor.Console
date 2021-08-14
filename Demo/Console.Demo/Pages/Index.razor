@@ -15,7 +15,7 @@
                                 ShowRepositoryUrl="true"
                                 AutoScroll="true"
                                 SetAutoFocusToConsoleInput="true"
-                                UseOriginalSystemConsole="true" />
+                                UseOriginalSystemConsole="false" />
 </p>
 
 
@@ -32,7 +32,7 @@
                 //        _logger.LogError(a.Exception, nameof(OnStartConsoleAppClick));
                 //    }
                 //});
-                InvokeAsync(SystemConsoleTest.StartAsync).ContinueWith(a =>
+                InvokeAsync(ConsoleTest.StartAsync).ContinueWith(a =>
                 {
                     if (a.Exception != null)
                     {
