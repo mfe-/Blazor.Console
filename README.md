@@ -67,6 +67,13 @@ namespace ConsoleApp1
 
 done.
 
+## Limitations
+* *lots* of `Console` APIs are not supported in a browser eg
+  * ForegroundColor
+  * BackgroundColor
+  * Title
+  * WindowWidth
+
 ## Further work
 * [support other ASCII characters:](https://github.com/TrevorDArcyEvans/Blazor.Console/blob/d9f62ccd713f7ebe7ae9fb29319e17c16f9d5340/Console.Extensions.Blazor/BlazorConsole.cs#L160)
   * https://mailtrap.io/blog/nbsp/
