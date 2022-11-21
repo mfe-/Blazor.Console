@@ -156,7 +156,9 @@ namespace Blzr.Console
             }
 
             consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
-            consoleInput = consoleInput.Replace(Environment.NewLine, "</br>");
+            consoleInput = consoleInput
+                .Replace(Environment.NewLine, "</br>")
+                .Replace(" ", "&nbsp;");
             if (newline)
             {
                 _StringBuilder.AppendLine($"{consoleInput}</br>");
