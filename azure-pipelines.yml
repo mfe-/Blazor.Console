@@ -117,6 +117,7 @@ steps:
     versioningScheme: 'byBuildNumber'
 
 - task: NuGetCommand@2
+  displayName: 'upload nuget package to nuget.org'
   condition: and(succeeded(), eq(${{ parameters.nugetPush }}, 'true'))
   inputs:
     command: 'push'
