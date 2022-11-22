@@ -17,7 +17,7 @@ namespace Blzr.Console
         protected string Output = string.Empty;
         protected string Placeholder { get; set; } = "Wait for input request.";
         protected string? Disabled { get; set; } = DisabledString;
-        public static readonly string? DisabledString = null;// "Disabled";
+        public static readonly string? DisabledString = null;
         public event EventHandler<string>? ConsoleInputEvent;
 
         [Parameter]
@@ -169,14 +169,14 @@ namespace Blzr.Console
                 _StringBuilder.AppendLine(consoleInput);
             }
             Output = _StringBuilder.ToString();
-            //DisableInput();
+
             //force rerender of component
             StateHasChanged();
-            if(AutoScroll)
+            if(AutoScroll && JSRuntime is IJSRuntime)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.scrollToBottom");
             }
-            if (SetAutoFocusToConsoleInput)
+            if (SetAutoFocusToConsoleInput && JSRuntime is IJSRuntime)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.setFocusToElement", ConsoleInputId);
             }
@@ -196,13 +196,11 @@ namespace Blzr.Console
 
         private void EnableInput()
         {
-            //Disabled = null;
             Placeholder = "Enter input.";
         }
 
         private void DisableInput()
         {
-            //Disabled = DisabledString;
             Placeholder = "Wait for input request.";
         }
 
