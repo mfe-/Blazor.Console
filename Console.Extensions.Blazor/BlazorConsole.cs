@@ -81,7 +81,7 @@ namespace Blzr.Console
         /// </summary>
         /// <param name="sender">The object which fired the event</param>
         /// <param name="e">The user input</param>
-        private void BlazorConsoleComponent_CommandInputEvent(object sender, string e)
+        private void BlazorConsoleComponent_CommandInputEvent(object? sender, string e)
         {
             CommandTaskCompletionSource?.SetResult(e);
         }
