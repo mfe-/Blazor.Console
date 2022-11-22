@@ -117,7 +117,7 @@ steps:
     versioningScheme: 'byBuildNumber'
 
 - task: NuGetCommand@2
-  condition: and(succeeded(), eq(parameters['nugetPush'], 'true'))
+  condition: and(succeeded(), eq(${{ parameters.nugetPush }}, 'true'))
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
