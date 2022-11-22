@@ -22,13 +22,13 @@ namespace Wpf.Console
             Closed += MainWindow_Closed;
         }
 
-        private void MainWindow_Closed(object sender, EventArgs e)
+        private void MainWindow_Closed(object? sender, EventArgs e)
         {
-            _stringWriterRedirect.Dispose();
-            _stringReaderRedirect.Dispose();
+            _stringWriterRedirect?.Dispose();
+            _stringReaderRedirect?.Dispose();
         }
-        StringWriterRedirect _stringWriterRedirect;
-        StringReaderRedirect _stringReaderRedirect;
+        StringWriterRedirect? _stringWriterRedirect;
+        StringReaderRedirect? _stringReaderRedirect;
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -45,7 +45,7 @@ namespace Wpf.Console
             Thread t = new Thread(
             () =>
             {
-                ConsoleApp1.Program.Main(null);
+                ConsoleApp1.Program.Main(new string[0]);
                 MessageBox.Show("ConsoleApp finished.");
             });
             t.IsBackground = true;
@@ -62,7 +62,7 @@ namespace Wpf.Console
         {
             return WriteLinePrivate(s);
         }
-        SynchronizationContext SynchronizationContext = SynchronizationContext.Current;
+        SynchronizationContext? SynchronizationContext = SynchronizationContext.Current;
         private Task WriteLinePrivate(string consoleInput, bool newline = true)
         {
             string readLineText = consoleInput;
@@ -78,7 +78,7 @@ namespace Wpf.Console
             if (SynchronizationContext.Current != this.SynchronizationContext)
             {
                 //because outputTextBox is handled by a diffrent thread use synchronizationcontext to post operation on original thread
-                this.SynchronizationContext.Post(new SendOrPostCallback((outputTextB) =>
+                this.SynchronizationContext?.Post(new SendOrPostCallback((outputTextB) =>
                 {
                     if (outputTextB is TextBlock textBlock)
                     {
@@ -92,7 +92,7 @@ namespace Wpf.Console
             }
             return Task.CompletedTask;
         }
-        TaskCompletionSource<string> StringTaskCompletionSource = new TaskCompletionSource<string>();
+        TaskCompletionSource<string>? StringTaskCompletionSource = new TaskCompletionSource<string>();
         public async Task<string> Read()
         {
             StringTaskCompletionSource = new TaskCompletionSource<string>();
