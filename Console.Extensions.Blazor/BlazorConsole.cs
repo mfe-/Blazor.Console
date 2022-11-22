@@ -156,13 +156,9 @@ namespace Blzr.Console
             }
 
             consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
-            
-            // TODO     support other ASCII characters:
-            //      https://mailtrap.io/blog/nbsp/
-            //      https://www.freeformatter.com/html-entities.html
             consoleInput = consoleInput
-                .Replace(Environment.NewLine, "</br>")
-                .Replace(" ", "&nbsp;");
+              .Replace(Environment.NewLine, "</br>")
+              .Replace(" ", "&nbsp;");
 
             if (newline)
             {
