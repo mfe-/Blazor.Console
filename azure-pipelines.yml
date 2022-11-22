@@ -4,8 +4,8 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-#- main
- - azure-pipelines
+- main
+# - azure-pipelines
 
 pool:
   vmImage: 'windows-latest'
