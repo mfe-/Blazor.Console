@@ -4,11 +4,17 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-- main
-# - azure-pipelines
+#- main
+ - azure-pipelines
 
 pool:
   vmImage: 'windows-latest'
+
+parameters:
+- name: nugetPush
+  displayName: 'Push created nuget package to nuget.org'
+  type: boolean
+  default: false
 
 variables:
 - name: solution
@@ -110,16 +116,8 @@ steps:
     #includesource: true
     versioningScheme: 'byBuildNumber'
 
-#- task: DotNetCoreCLI@2
-#  displayName: 'push nuget'
-#  inputs:
-#    command: 'push'
-#    arguments: '--skip-duplicate'
-#    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-#    nuGetFeedType: 'internal'
-#    publishVstsFeed: '3bf81259-ccfe-4071-b8f8-bb5f44d4a8fb'
-
 - task: NuGetCommand@2
+  condition: and(succeeded(), eq(parameters['nugetPush'], 'true'))
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
