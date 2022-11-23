@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/mfe-/Blazor.Console</PackageProjectUrl>
     <Description>Allows to wrap System.Console.Write and ReadLine calls into the Console.Extension libary which makes it possible to use the transformed console application for blazor webassembly projects.</Description>
