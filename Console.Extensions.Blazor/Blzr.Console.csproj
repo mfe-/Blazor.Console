@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Console.Extensions\Console.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Blzr.Console.Test" />
+  </ItemGroup>
+
 </Project>

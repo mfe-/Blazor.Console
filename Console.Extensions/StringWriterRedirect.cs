@@ -15,7 +15,7 @@ namespace Console.Extensions
         public Func<String, Task>? StringWriterLineRedirectTaskFunc;
         public Func<String, Task>? StringWriterRedirectTaskFunc;
 
-        private Task WriteGeneric<T>(T value)
+        private Task? WriteGeneric<T>(T value)
         {
             if (value == null) return Task.CompletedTask;
             if (value is char[] chararr)

@@ -10,22 +10,40 @@ using console = Console.Extensions.Console;
 
 namespace Blzr.Console
 {
+    /// <summary>
+    /// The component which will render the console terminal
+    /// </summary>
     public partial class BlazorConsoleComponent : ComponentBase, IDisposable
     {
+        private const string htmlWhiteSpace = "&nbsp;";
         private readonly StringBuilder _StringBuilder = new StringBuilder();
         protected ConsoleInput? Command { get; set; }
-        protected string Output = string.Empty;
+        internal string Output = string.Empty;
         protected string Placeholder { get; set; } = "Wait for input request.";
         protected string? Disabled { get; set; } = DisabledString;
-        public static readonly string? DisabledString = null;// "Disabled";
+        public static readonly string? DisabledString = null;
         public event EventHandler<string>? ConsoleInputEvent;
-
+        /// <summary>
+        /// Shows the github repository url of <see cref="BlazorConsoleComponent"/> when set to true. Set it to false to hide the github repository url for <see cref="BlazorConsoleComponent"/>
+        /// </summary>
         [Parameter]
         public bool ShowRepositoryUrl { get; set; } = true;
+        /// <summary>
+        /// Get or sets a name for the Console which will be displayed when set.
+        /// </summary>
         [Parameter]
         public string? Name { get; set; }
+        /// <summary>
+        /// Defines whether <see cref="console"/> should be used or <see cref="System.Console.WriteLine"/> (<see cref="System.Console.WriteLine"/> is experimental and under development). 
+        /// </summary>
         [Parameter]
         public bool UseOriginalSystemConsole { get; set; } = false;
+        /// <summary>
+        /// Get or sets the value for <see cref="ReplaceWhiteString"/>. 
+        /// If set to true any input string for <see cref="WriteAsync(string)"/> or <see cref="WriteLineAsync(string)"/> will replace" " by <see cref="htmlWhiteSpace"/> (&nbsp;). 
+        /// </summary>
+        [Parameter]
+        public bool ReplaceWhiteString { get; set; } = false;
         public string? Version() => System.Reflection.Assembly.GetExecutingAssembly()?.GetName()?.Version?.ToString();
 
         protected StringWriterRedirect? _stringWriterRedirect;
@@ -86,6 +104,10 @@ namespace Blzr.Console
             CommandTaskCompletionSource?.SetResult(e);
         }
         TaskCompletionSource<string>? CommandTaskCompletionSource = new TaskCompletionSource<string>();
+        /// <summary>
+        /// Reads the input of the user in the web console from an input field
+        /// </summary>
+        /// <returns>the enterted string of the user</returns>
         public async Task<string> ReadLineAsync()
         {
             CommandTaskCompletionSource = new TaskCompletionSource<string>();
@@ -108,7 +130,7 @@ namespace Blzr.Console
             {
                 return inProcessRuntime.Invoke<string>("BlazorConsole.readLine");
             }
-            else throw new InvalidCastException("Could not cast JSRuntime to IJSInProcessRuntime");
+            throw new InvalidCastException("Could not cast JSRuntime to IJSInProcessRuntime");
         }
         /// <summary>
         /// Fires the <seealso cref="ConsoleInputEvent"/> event
@@ -146,8 +168,21 @@ namespace Blzr.Console
         protected IJSRuntime? JSRuntime { get; set; }
         private bool isFirstUse = true;
         protected string ConsoleInputId = "consoleInput";
+        /// <summary>
+        /// Generates the proper output for Console.Write or Console.WriteLine for the web browser
+        /// </summary>
+        /// <remarks>
+        /// The generated output will be written to <see cref="Output"/>. 
+        /// </remarks>
+        /// <param name="consoleInput"></param>
+        /// <param name="newline"></param>
+        /// <returns></returns>
         private async Task WriteLinePrivate(string consoleInput, bool newline = true)
         {
+            if (ReplaceWhiteString)
+            {
+                consoleInput = consoleInput.Replace(" ", htmlWhiteSpace);
+            }
             if (isFirstUse)
             {
                 //when the app writes the first line make a break
@@ -157,8 +192,7 @@ namespace Blzr.Console
 
             consoleInput = $"<span class=\"{CurrentConsoleColor}\">{consoleInput}</span>";
             consoleInput = consoleInput
-              .Replace(Environment.NewLine, "</br>")
-              .Replace(" ", "&nbsp;");
+              .Replace(Environment.NewLine, "</br>");
 
             if (newline)
             {
@@ -169,14 +203,14 @@ namespace Blzr.Console
                 _StringBuilder.AppendLine(consoleInput);
             }
             Output = _StringBuilder.ToString();
-            //DisableInput();
+
             //force rerender of component
             StateHasChanged();
-            if(AutoScroll)
+            if (AutoScroll && JSRuntime is IJSRuntime)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.scrollToBottom");
             }
-            if (SetAutoFocusToConsoleInput)
+            if (SetAutoFocusToConsoleInput && JSRuntime is IJSRuntime)
             {
                 await JSRuntime.InvokeVoidAsync("BlazorConsole.setFocusToElement", ConsoleInputId);
             }
@@ -196,13 +230,11 @@ namespace Blzr.Console
 
         private void EnableInput()
         {
-            //Disabled = null;
             Placeholder = "Enter input.";
         }
 
         private void DisableInput()
         {
-            //Disabled = DisabledString;
             Placeholder = "Wait for input request.";
         }
 

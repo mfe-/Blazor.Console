@@ -43,7 +43,7 @@ namespace Console.Extensions
             get { return Out.StringWriterRedirectTaskFunc; }
             set { Out.StringWriterRedirectTaskFunc = value; }
         }
-        public static Action<ConsoleColor> OnForegroundColorChanged { get; set; }
+        public static Action<ConsoleColor>? OnForegroundColorChanged { get; set; }
         public static Action? OnClearAction { get; set; }
         //
         // Summary:

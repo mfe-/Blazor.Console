@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30621.155
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32916.344
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blzr.Console", "Console.Extensions.Blazor\Blzr.Console.csproj", "{FE8E4793-A616-4599-9900-8EB839A0D251}"
 EndProject
@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blzr.Console.Test", "Console.Extensions.Blazor.Test\Blzr.Console.Test.csproj", "{CC99009B-1792-479B-9842-C0D93A9D9B61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{B2FC539E-D86F-4DFD-8522-9B3D4305F999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2FC539E-D86F-4DFD-8522-9B3D4305F999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2FC539E-D86F-4DFD-8522-9B3D4305F999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC99009B-1792-479B-9842-C0D93A9D9B61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC99009B-1792-479B-9842-C0D93A9D9B61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC99009B-1792-479B-9842-C0D93A9D9B61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC99009B-1792-479B-9842-C0D93A9D9B61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
