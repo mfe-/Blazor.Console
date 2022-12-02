@@ -16,9 +16,20 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+      
       - name: Install dependencies
         run: dotnet restore
+      
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      
       - name: Test
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" --no-restore --verbosity normal 
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
